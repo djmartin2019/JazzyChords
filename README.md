@@ -21,6 +21,4 @@ Welcome to the **Jazz Chord Progression Generator**, your new favorite tool for 
 3. **Explore and Play**: View the chords and scale notes, and use the playback controls to hear your creation.
 
 ### Get Started:
-Dive into the world of jazz and start generating beautiful chord progressions today! Check out the project on GitHub and start jamming:
-
-[GitHub Repository](https://github.com/yourusername/jazz-chord-progression-generator)
+Dive into the world of jazz and start generating beautiful chord progressions today!
