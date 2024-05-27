@@ -13,10 +13,6 @@ document
   .addEventListener("click", generateChordProgression);
 
 let chords = [];
-let currentChordIndex = 0;
-let isPlaying = false;
-let audioContext = new (window.AudioContext || window.webkitAudioContext)();
-let gainNode = audioContext.createGain();
 
 const chordStructures = {
   major: ["Imaj7", "ii7", "iii7", "IVmaj7", "V7", "vi7", "viim7b5"],
@@ -92,8 +88,21 @@ function displayChords(scale, mode) {
   `;
 }
 
+function getCurrentTimestamp() {
+  const now = new Date();
+  const year = now.getFullYear();
+  const month = String(now.getMonth() + 1).padStart(2, "0");
+  const day = String(now.getDate()).padStart(2, "0");
+  const hours = String(now.getHours()).padStart(2, "0");
+  const minutes = String(now.getMinutes()).padStart(2, "0");
+  const seconds = String(now.getSeconds()).padStart(2, "0");
+  return `${year}-${month}-${day}_${hours}-${minutes}-${seconds}`;
+}
+
 document.getElementById("save").addEventListener("click", () => {
   const chordsText = document.getElementById("chords").innerText;
+  const timestamp = getCurrentTimestamp();
+  const filename = `chord_progression_${timestamp}.txt`;
 
   if (isIOS()) {
     // For iOS devices, open the content in a new tab
@@ -107,7 +116,7 @@ document.getElementById("save").addEventListener("click", () => {
 
     const a = document.createElement("a");
     a.href = url;
-    a.download = "chord_progression.txt";
+    a.download = filename;
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
