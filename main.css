@@ -1,21 +1,29 @@
 body {
-  font-family: Arial, sans-serif;
+  font-family: "Roboto", Arial, sans-serif;
   margin: 0;
   padding: 0;
   text-align: center;
-  background-color: #f0f0f0;
-  color: #333;
+  background-color: #121212;
+  color: #ffffff;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
 }
 
 header {
-  background-color: #000;
+  background-color: #1f1f1f;
   color: white;
   padding: 1em 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 }
 
 header h1 {
   margin: 0;
   font-size: 2.5em;
+  margin-bottom: 0.5em;
 }
 
 header p {
@@ -24,11 +32,26 @@ header p {
 }
 
 main {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   padding: 2em 1em;
 }
 
-section {
-  margin: 2em 0;
+.container {
+  background-color: #ffffff;
+  color: #333333;
+  padding: 2em;
+  border-radius: 15px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+  max-width: 600px;
+  width: 90%;
+}
+
+h2 {
+  font-size: 1.8em;
+  margin-bottom: 1em;
 }
 
 label {
@@ -41,11 +64,13 @@ select,
 button {
   padding: 0.5em;
   font-size: 1em;
-  margin: 0.5em;
+  margin: 0.5em 0;
   border: 1px solid #333;
   border-radius: 5px;
-  background-color: #fff;
+  background-color: #f5f5f5;
   color: #333;
+  transition: background-color 0.3s, color 0.3s;
+  width: 100%;
 }
 
 button:hover,
@@ -65,12 +90,10 @@ canvas {
 }
 
 footer {
-  background-color: #000;
+  background-color: #1f1f1f;
   color: white;
   padding: 1em 0;
-  position: fixed;
-  width: 100%;
-  bottom: 0;
+  text-align: center;
 }
 
 footer p {
@@ -91,14 +114,17 @@ footer p {
     padding: 1em;
   }
 
-  button,
-  select {
+  select,
+  button {
     width: 100%;
-    box-sizing: border-box;
   }
 
   canvas {
     width: 100%;
     height: auto;
+  }
+
+  .container {
+    width: 100%;
   }
 }
