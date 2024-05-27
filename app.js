@@ -89,7 +89,18 @@ function displayChords(scale, mode) {
 }
 
 document.getElementById("save").addEventListener("click", () => {
-  alert("Chord progression saved!");
+  const chordsText = document.getElementById("chords").innerText;
+  const blob = new Blob([chordsText], { type: "text/plain" });
+  const url = URL.createObjectURL(blob);
+
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = "chord_progression.txt";
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+
+  URL.revokeObjectURL(url);
 });
 
 document.getElementById("share").addEventListener("click", () => {
