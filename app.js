@@ -12,15 +12,8 @@ import {
 document
   .getElementById("generate")
   .addEventListener("click", generateChordProgression);
-/* document.getElementById("play").addEventListener("click", playChords);
-document.getElementById("pause").addEventListener("click", pauseChords);
-document.getElementById("stop").addEventListener("click", stopChords); */
 
 let chords = [];
-let currentChordIndex = 0;
-let isPlaying = false;
-let audioContext = new (window.AudioContext || window.webkitAudioContext)();
-let gainNode = audioContext.createGain();
 
 function generateChordProgression() {
   const scale = document.getElementById("scale").value;
@@ -69,44 +62,4 @@ function displayChords(scale, mode) {
       <h3>Scale Notes:</h3>
       <p>${scaleNotes.join(", ")}</p>
   `;
-}
-
-function playChords() {
-  if (isPlaying) return;
-  isPlaying = true;
-  currentChordIndex = 0;
-  playNextChord();
-}
-
-function playNextChord() {
-  if (!isPlaying || currentChordIndex >= chords.length) {
-    isPlaying = false;
-    return;
-  }
-  const chord = chords[currentChordIndex];
-  playChord(chord);
-  currentChordIndex++;
-  setTimeout(playNextChord, 2000);
-}
-
-function playChord(chord) {
-  console.log(`Playing chord: ${chord}`);
-}
-
-function pauseChords() {
-  isPlaying = false;
-}
-
-function stopChords() {
-  isPlaying = false;
-  currentChordIndex = 0;
-}
-
-function playChord(chord) {
-  const oscillator = audioContext.createOscillator();
-  oscillator.type = "sine";
-  oscillator.frequency.setValueAtTime(440, audioContext.currentTime);
-  oscillator.connect(gainNode).connect(audioContext.destination);
-  oscillator.start();
-  oscillator.stop(audioContext.currentTime + 2);
 }
