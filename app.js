@@ -28,6 +28,10 @@ const chordStructures = {
   locrian: ["im7b5", "bIIm7", "bIIImaj7", "iv7", "bV7", "bVImaj7", "bVII7"],
 };
 
+function isIOS() {
+  return /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+}
+
 function generateChordProgression() {
   const scale = document.getElementById("scale").value;
   const mode = document.getElementById("mode").value;
@@ -90,17 +94,26 @@ function displayChords(scale, mode) {
 
 document.getElementById("save").addEventListener("click", () => {
   const chordsText = document.getElementById("chords").innerText;
-  const blob = new Blob([chordsText], { type: "text/plain" });
-  const url = URL.createObjectURL(blob);
 
-  const a = document.createElement("a");
-  a.href = url;
-  a.download = "chord_progression.txt";
-  document.body.appendChild(a);
-  a.click();
-  document.body.removeChild(a);
+  if (isIOS()) {
+    // For iOS devices, open the content in a new tab
+    const newWindow = window.open();
+    newWindow.document.write(`<pre>${chordsText}</pre>`);
+    newWindow.document.close();
+  } else {
+    // For non-iOS devices, create and download a text file
+    const blob = new Blob([chordsText], { type: "text/plain" });
+    const url = URL.createObjectURL(blob);
 
-  URL.revokeObjectURL(url);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "chord_progression.txt";
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+
+    URL.revokeObjectURL(url);
+  }
 });
 
 document.getElementById("share").addEventListener("click", () => {
