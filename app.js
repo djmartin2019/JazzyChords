@@ -26,16 +26,16 @@ document.getElementById("generate").addEventListener("click", () => {
 
 function displayChords(chords, scale, mode) {
   const chordsDiv = document.getElementById("chords");
-  const chordNotes = chords.map((chord) => getChordNotes(scale, mode, chord));
+  const scaleNotes = getScaleNotes(scale, mode);
 
   chordsDiv.innerHTML = `
     <p>${chords.join(" - ")}</p>
-    <h3>Chord Notes:</h3>
-    <p>${chordNotes.join(", ")}</p>
+    <h3>Scale Notes:</h3>
+    <p>${scaleNotes.join(", ")}</p>
   `;
 }
 
-function getChordNotes(scale, mode, chord) {
+function getScaleNotes(scale, mode) {
   let scaleNotes = [];
 
   switch (mode) {
@@ -64,43 +64,7 @@ function getChordNotes(scale, mode, chord) {
       scaleNotes = [];
   }
 
-  switch (chord) {
-    case "I":
-    case "i":
-      return [scaleNotes[0], scaleNotes[2], scaleNotes[4]].join(", ");
-    case "ii":
-    case "iio":
-      return [scaleNotes[1], scaleNotes[3], scaleNotes[5]].join(", ");
-    case "iii":
-    case "III":
-      return [scaleNotes[2], scaleNotes[4], scaleNotes[6]].join(", ");
-    case "IV":
-    case "iv":
-      return [scaleNotes[3], scaleNotes[5], scaleNotes[0]].join(", ");
-    case "V":
-    case "V/ii":
-    case "V/iii":
-    case "V/IV":
-    case "V/V":
-    case "V/vi":
-      return [scaleNotes[4], scaleNotes[6], scaleNotes[1]].join(", ");
-    case "vi":
-    case "VI":
-      return [scaleNotes[5], scaleNotes[0], scaleNotes[2]].join(", ");
-    case "viio":
-    case "VII":
-      return [scaleNotes[6], scaleNotes[1], scaleNotes[3]].join(", ");
-    case "bII":
-      return [scaleNotes[1], scaleNotes[3], scaleNotes[5]].join(", ");
-    case "bIII":
-      return [scaleNotes[2], scaleNotes[4], scaleNotes[6]].join(", ");
-    case "bVI":
-      return [scaleNotes[5], scaleNotes[0], scaleNotes[2]].join(", ");
-    case "bVII":
-      return [scaleNotes[6], scaleNotes[1], scaleNotes[3]].join(", ");
-    default:
-      return [];
-  }
+  return scaleNotes;
 }
 
 const modes = {
