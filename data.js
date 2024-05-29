@@ -126,24 +126,59 @@ const diatonicChords = {
 const functionalChords = {
   major: {
     T: ["I", "iii", "vi"],
-    S: ["ii", "IV"],
-    D: ["V", "viio"],
+    S: ["ii", "IV", "ii7", "IV7"],
+    D: ["V", "viio", "V7"],
   },
   minor: {
     T: ["i", "III", "VI"],
-    S: ["iv", "ii°"],
-    D: ["V", "viio"],
+    S: ["iv", "ii°", "iv7"],
+    D: ["V", "viio", "V7"],
+  },
+  dorian: {
+    T: ["i", "iii", "v"],
+    S: ["IV", "ii"],
+    D: ["vii°", "V"],
+  },
+  phrygian: {
+    T: ["i", "III", "v"],
+    S: ["II", "iv"],
+    D: ["vii°", "V"],
+  },
+  lydian: {
+    T: ["I", "iii", "vi"],
+    S: ["II", "IV"],
+    D: ["vii°", "V"],
+  },
+  mixolydian: {
+    T: ["I", "iii", "v"],
+    S: ["ii", "IV"],
+    D: ["vii°", "V"],
+  },
+  locrian: {
+    T: ["i°", "III", "v"],
+    S: ["ii°", "iv"],
+    D: ["vii°", "V"],
   },
 };
 
 const secondaryDominants = {
   major: ["V/ii", "V/iii", "V/IV", "V/V", "V/vi"],
   minor: ["V/III", "V/iv", "V/V", "V/VI", "V/vii°"],
+  dorian: ["V/ii", "V/III", "V/IV", "V/v"],
+  phrygian: ["V/II", "V/III", "V/iv", "V/V"],
+  lydian: ["V/ii", "V/iii", "V/IV", "V/V", "V/vi"],
+  mixolydian: ["V/ii", "V/iii", "V/IV", "V/v", "V/VI"],
+  locrian: ["V/ii°", "V/III", "V/iv", "V/V"],
 };
 
 const borrowedChords = {
-  major: ["i", "bIII", "bVI", "bVII"],
-  minor: ["I", "IV", "V", "viio"],
+  major: ["i", "bIII", "bVI", "bVII", "iv", "bII"],
+  minor: ["I", "IV", "V", "viio", "bVII", "III"],
+  dorian: ["bIII", "IV", "bVII"],
+  phrygian: ["bII", "iv", "bVII"],
+  lydian: ["ii", "V", "vi"],
+  mixolydian: ["bVII", "ii", "v"],
+  locrian: ["bII", "iv", "bV"],
 };
 
 export {
