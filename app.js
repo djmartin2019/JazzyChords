@@ -28,8 +28,10 @@ function displayChords(chords, scale, mode) {
   const chordsDiv = document.getElementById("chords");
   const scaleNotes = getScaleNotes(scale, mode);
 
+  const formattedChords = chords.map((chord) => chord.replace("o", "°"));
+
   chordsDiv.innerHTML = `
-    <p>${chords.join(" - ")}</p>
+    <p>${formattedChords.join(" - ")}</p>
     <h3>Scale Notes:</h3>
     <p>${scaleNotes.join(", ")}</p>
   `;
