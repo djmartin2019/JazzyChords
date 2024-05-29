@@ -72,7 +72,7 @@ function getScaleNotes(scale, mode) {
 const modes = {
   "Feeling Dangerous": generateRandomProgression,
   "Whoa There": generateDiatonicProgression,
-  "Fancy Boy": generateExploratoryProgression,
+  Fancy: generateExploratoryProgression,
   Harmony: generateFunctionalProgression,
   Davey: generateJazzProgression,
 };
