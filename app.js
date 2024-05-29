@@ -6,53 +6,36 @@ import {
   lydianScales,
   mixolydianScales,
   locrianScales,
+  chordStructures,
+  diatonicChords,
+  functionalChords,
+  secondaryDominants,
+  borrowedChords,
 } from "./data.js";
 
-document
-  .getElementById("generate")
-  .addEventListener("click", generateChordProgression);
-
-let chords = [];
-
-const chordStructures = {
-  major: ["Imaj7", "ii7", "iii7", "IVmaj7", "V7", "vi7", "viim7b5"],
-  minor: ["i7", "iim7b5", "bIIImaj7", "iv7", "v7", "bVImaj7", "bVII7"],
-  dorian: ["i7", "ii7", "bIIImaj7", "IV7", "v7", "vim7b5", "bVIImaj7"],
-  phrygian: ["i7", "bIIm7b5", "bIIImaj7", "iv7", "v7", "bVImaj7", "bVII7"],
-  lydian: ["Imaj7", "II7", "iii7", "#ivm7b5", "Vmaj7", "vi7", "vii7"],
-  mixolydian: ["I7", "ii7", "iiim7b5", "IVmaj7", "v7", "vi7", "bVIImaj7"],
-  locrian: ["im7b5", "bIIm7", "bIIImaj7", "iv7", "bV7", "bVImaj7", "bVII7"],
-};
-
-function isIOS() {
-  return /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
-}
-
-function generateChordProgression() {
+document.getElementById("generate").addEventListener("click", () => {
   const scale = document.getElementById("scale").value;
   const mode = document.getElementById("mode").value;
-  const structure = chordStructures[mode];
+  const generationMode = document.getElementById("generation-mode").value;
 
-  // Show loading indicator
-  document.getElementById("loading").style.display = "block";
-  chords = [];
+  const generateProgression = modes[generationMode];
+  const chords = generateProgression(scale, mode);
 
-  setTimeout(() => {
-    for (let i = 0; i < 4; i++) {
-      const chord = structure[Math.floor(Math.random() * structure.length)];
-      chords.push(chord);
-    }
-    displayChords(scale, mode);
+  displayChords(chords, scale, mode);
+});
 
-    // Hide loading indicator and show buttons
-    document.getElementById("loading").style.display = "none";
-    document.getElementById("save").style.display = "inline-block";
-    document.getElementById("share").style.display = "inline-block";
-  }, 1000); // Simulating loading time
+function displayChords(chords, scale, mode) {
+  const chordsDiv = document.getElementById("chords");
+  const chordNotes = chords.map((chord) => getChordNotes(scale, mode, chord));
+
+  chordsDiv.innerHTML = `
+    <p>${chords.join(" - ")}</p>
+    <h3>Chord Notes:</h3>
+    <p>${chordNotes.join(", ")}</p>
+  `;
 }
 
-function displayChords(scale, mode) {
-  const chordsDiv = document.getElementById("chords");
+function getChordNotes(scale, mode, chord) {
   let scaleNotes = [];
 
   switch (mode) {
@@ -81,11 +64,136 @@ function displayChords(scale, mode) {
       scaleNotes = [];
   }
 
-  chordsDiv.innerHTML = `
-    <p>${chords.join(" - ")}</p>
-    <h3>Scale Notes:</h3>
-    <p>${scaleNotes.join(", ")}</p>
-  `;
+  switch (chord) {
+    case "I":
+    case "i":
+      return [scaleNotes[0], scaleNotes[2], scaleNotes[4]].join(", ");
+    case "ii":
+    case "iio":
+      return [scaleNotes[1], scaleNotes[3], scaleNotes[5]].join(", ");
+    case "iii":
+    case "III":
+      return [scaleNotes[2], scaleNotes[4], scaleNotes[6]].join(", ");
+    case "IV":
+    case "iv":
+      return [scaleNotes[3], scaleNotes[5], scaleNotes[0]].join(", ");
+    case "V":
+    case "V/ii":
+    case "V/iii":
+    case "V/IV":
+    case "V/V":
+    case "V/vi":
+      return [scaleNotes[4], scaleNotes[6], scaleNotes[1]].join(", ");
+    case "vi":
+    case "VI":
+      return [scaleNotes[5], scaleNotes[0], scaleNotes[2]].join(", ");
+    case "viio":
+    case "VII":
+      return [scaleNotes[6], scaleNotes[1], scaleNotes[3]].join(", ");
+    case "bII":
+      return [scaleNotes[1], scaleNotes[3], scaleNotes[5]].join(", ");
+    case "bIII":
+      return [scaleNotes[2], scaleNotes[4], scaleNotes[6]].join(", ");
+    case "bVI":
+      return [scaleNotes[5], scaleNotes[0], scaleNotes[2]].join(", ");
+    case "bVII":
+      return [scaleNotes[6], scaleNotes[1], scaleNotes[3]].join(", ");
+    default:
+      return [];
+  }
+}
+
+const modes = {
+  "Mystic Wanderer": generateRandomProgression,
+  "Dreamy Path": generateDiatonicProgression,
+  "Bold Explorer": generateExploratoryProgression,
+  "Harmony Seeker": generateFunctionalProgression,
+  "Jazz Enthusiast": generateJazzProgression,
+};
+
+// Random chord generation
+function generateRandomProgression(scale, mode) {
+  const diatonic = diatonicChords[mode];
+  const progression = [];
+
+  for (let i = 0; i < 4; i++) {
+    const chord = diatonic[Math.floor(Math.random() * diatonic.length)];
+    progression.push(chord);
+  }
+
+  return progression;
+}
+
+// Diatonic progression with added randomness
+function generateDiatonicProgression(scale, mode) {
+  const diatonic = diatonicChords[mode];
+  const progression = [diatonic[0]]; // Start with the tonic chord
+
+  for (let i = 1; i < 4; i++) {
+    const chord = diatonic[Math.floor(Math.random() * diatonic.length)];
+    progression.push(chord);
+  }
+
+  return progression;
+}
+
+// Incorporates secondary dominants and borrowed chords
+function generateExploratoryProgression(scale, mode) {
+  const diatonic = diatonicChords[mode];
+  const secondary = secondaryDominants[mode];
+  const borrowed = borrowedChords[mode];
+  const progression = [diatonic[0]]; // Start with the tonic chord
+
+  for (let i = 1; i < 4; i++) {
+    const rand = Math.random();
+    if (rand < 0.6) {
+      progression.push(diatonic[Math.floor(Math.random() * diatonic.length)]);
+    } else if (rand < 0.8) {
+      progression.push(secondary[Math.floor(Math.random() * secondary.length)]);
+    } else {
+      progression.push(borrowed[Math.floor(Math.random() * borrowed.length)]);
+    }
+  }
+
+  return progression;
+}
+
+// Follows strict functional harmony rules
+function generateFunctionalProgression(scale, mode) {
+  const progression = [];
+  const functions = ["T", "S", "D", "T"];
+
+  functions.forEach((func) => {
+    const chordOptions = functionalChords[mode][func];
+    const chord = chordOptions[Math.floor(Math.random() * chordOptions.length)];
+    progression.push(chord);
+  });
+
+  return progression;
+}
+
+// Focuses on jazz chord progressions and voicings
+function generateJazzProgression(scale, mode) {
+  const diatonic = diatonicChords[mode];
+  const progression = [diatonic[0]]; // Start with the tonic chord
+
+  for (let i = 1; i < 4; i++) {
+    const chord = diatonic[Math.floor(Math.random() * diatonic.length)];
+    progression.push(addJazzVoicing(chord));
+  }
+
+  return progression;
+}
+
+function addJazzVoicing(chord) {
+  const jazzVoicings = ["maj7", "min7", "7", "9", "13", "m7b5"];
+  return `${chord}${
+    jazzVoicings[Math.floor(Math.random() * jazzVoicings.length)]
+  }`;
+}
+
+function isIOS() {
+  return /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
 }
 
 function getCurrentTimestamp() {

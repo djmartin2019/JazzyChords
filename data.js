@@ -113,6 +113,39 @@ const chordStructures = {
   locrian: ["im7b5", "bIIm7", "bIIImaj7", "iv7", "bV7", "bVImaj7", "bVII7"],
 };
 
+const diatonicChords = {
+  major: ["I", "ii", "iii", "IV", "V", "vi", "viio"],
+  minor: ["i", "iio", "III", "iv", "v", "VI", "VII"],
+  dorian: ["i", "ii", "bIII", "IV", "v", "vio", "bVII"],
+  phrygian: ["i", "bII", "bIII", "iv", "v", "bVI", "bVII"],
+  lydian: ["I", "II", "iii", "#iv", "V", "vi", "vii"],
+  mixolydian: ["I", "ii", "iiio", "IV", "v", "vi", "bVII"],
+  locrian: ["io", "bII", "biii", "iv", "bV", "bVI", "bvii"],
+};
+
+const functionalChords = {
+  major: {
+    T: ["I", "iii", "vi"],
+    S: ["ii", "IV"],
+    D: ["V", "viio"],
+  },
+  minor: {
+    T: ["i", "III", "VI"],
+    S: ["iv", "ii°"],
+    D: ["V", "viio"],
+  },
+};
+
+const secondaryDominants = {
+  major: ["V/ii", "V/iii", "V/IV", "V/V", "V/vi"],
+  minor: ["V/III", "V/iv", "V/V", "V/VI", "V/vii°"],
+};
+
+const borrowedChords = {
+  major: ["i", "bIII", "bVI", "bVII"],
+  minor: ["I", "IV", "V", "viio"],
+};
+
 export {
   majorScales,
   minorScales,
@@ -122,4 +155,8 @@ export {
   mixolydianScales,
   locrianScales,
   chordStructures,
+  diatonicChords,
+  functionalChords,
+  secondaryDominants,
+  borrowedChords,
 };
