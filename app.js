@@ -68,11 +68,11 @@ function getScaleNotes(scale, mode) {
 }
 
 const modes = {
-  "Mystic Wanderer": generateRandomProgression,
-  "Dreamy Path": generateDiatonicProgression,
-  "Bold Explorer": generateExploratoryProgression,
-  "Harmony Seeker": generateFunctionalProgression,
-  "Jazz Enthusiast": generateJazzProgression,
+  "Feeling Dangerous": generateRandomProgression,
+  "Whoa There": generateDiatonicProgression,
+  "Fancy Boy": generateExploratoryProgression,
+  Harmony: generateFunctionalProgression,
+  Davey: generateJazzProgression,
 };
 
 // Random chord generation
