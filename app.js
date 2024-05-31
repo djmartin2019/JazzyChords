@@ -13,6 +13,20 @@ import {
   borrowedChords,
 } from "./data.js";
 
+function tempoChange(value) {
+  const tempoValue = document.getElementById("tempoValue");
+  tempoValue.textContent = value;
+}
+
+const tempoSlider = document.getElementById("tempoSlider");
+const tempoValue = document.getElementById("tempoValue");
+
+tempoValue.textContent = tempoSlider.value;
+
+tempoSlider.addEventListener("input", function () {
+  tempoChange(this.value);
+});
+
 document.getElementById("generate").addEventListener("click", () => {
   const scale = document.getElementById("scale").value;
   const mode = document.getElementById("mode").value;
