@@ -13,39 +13,43 @@ import {
   borrowedChords,
 } from "./data.js";
 
-function tempoChange(value) {
-  const tempoValue = document.getElementById("tempoValue");
-  tempoValue.textContent = value;
-}
-
 const tempoSlider = document.getElementById("tempoSlider");
 const tempoValue = document.getElementById("tempoValue");
 
-tempoValue.textContent = tempoSlider.value;
+// tempoValue.textContent = tempoSlider.value;
 
-tempoSlider.addEventListener("input", function () {
-  tempoChange(this.value);
-});
+// function tempoChange(value) {
+//   const tempoValue = document.getElementById("tempoValue");
+//   tempoValue.textContent = value;
+// }
 
-document.getElementById("generate").addEventListener("click", () => {
-  const scale = document.getElementById("scale").value;
-  const mode = document.getElementById("mode").value;
-  const generationMode = document.getElementById("generation-mode").value;
+// tempoSlider.addEventListener("input", function () {
+//   tempoChange(this.value);
+// });
 
-  const generateProgression = modes[generationMode];
-  const chords = generateProgression(scale, mode);
+function getTimeSignature() {
+  const timeSignature = document.getElementById("time-signature");
+  const parts = timeSignature.value.split("/");
+  const beats = parseInt(parts[0], 10);
+  const beatDuration = parseInt(parts[1], 10);
+  return [beats, beatDuration];
+}
 
-  displayChords(chords, scale, mode);
-});
-
-function displayChords(chords, scale, mode) {
+function displayChords(chordsData, scale, mode) {
   const chordsDiv = document.getElementById("chords");
   const scaleNotes = getScaleNotes(scale, mode);
 
-  const formattedChords = chords.map((chord) => chord.replace("o", "°"));
+  const formattedChords = chordsData.progression
+    .map((barProgression) => {
+      const barChords = barProgression.map(
+        (chordData) => `${chordData.chord} (${chordData.duration})`
+      );
+      return `<p>${barChords.join(" - ")}</p>`;
+    })
+    .join("");
 
   chordsDiv.innerHTML = `
-    <p>${formattedChords.join(" - ")}</p>
+    ${formattedChords}
     <h3>Scale Notes:</h3>
     <p>${scaleNotes.join(", ")}</p>
   `;
@@ -92,77 +96,244 @@ const modes = {
 };
 
 // Random chord generation
-function generateRandomProgression(scale, mode) {
+function generateRandomProgression(scale, mode, numOfBars) {
   const diatonic = diatonicChords[mode];
   const progression = [];
 
-  for (let i = 0; i < 4; i++) {
-    const chord = diatonic[Math.floor(Math.random() * diatonic.length)];
-    progression.push(chord);
+  const timeSig = getTimeSignature();
+  const beatsPerMeasure = timeSig[0];
+  const beatDuration = timeSig[1];
+
+  for (let bar = 0; bar < numOfBars; bar++) {
+    let remainingBeats = beatsPerMeasure;
+    const barProgression = [];
+    let previousChord = diatonic[0]; // Start with the tonic chord
+
+    while (remainingBeats > 0) {
+      const chord = diatonic[Math.floor(Math.random() * diatonic.length)];
+      if (chord !== previousChord || remainingBeats === beatsPerMeasure) {
+        const duration = Math.min(
+          Math.floor(Math.random() * remainingBeats) + 1,
+          remainingBeats
+        );
+        barProgression.push({
+          chord: chord,
+          duration: duration,
+        });
+        remainingBeats -= duration;
+        previousChord = chord;
+      }
+    }
+
+    progression.push(barProgression);
   }
 
-  return progression;
+  return {
+    progression: progression,
+    beatDuration: beatDuration,
+  };
 }
 
 // Diatonic progression with added randomness
-function generateDiatonicProgression(scale, mode) {
+function generateDiatonicProgression(scale, mode, numOfBars) {
   const diatonic = diatonicChords[mode];
-  const progression = [diatonic[0]]; // Start with the tonic chord
+  const progression = [];
 
-  for (let i = 1; i < 4; i++) {
-    const chord = diatonic[Math.floor(Math.random() * diatonic.length)];
-    progression.push(chord);
+  const timeSig = getTimeSignature();
+  const beatsPerMeasure = timeSig[0];
+  const beatDuration = timeSig[1];
+
+  for (let bar = 0; bar < numOfBars; bar++) {
+    let remainingBeats = beatsPerMeasure;
+    const barProgression = [];
+    const chordOptions = functionalChords[mode]["T"];
+    let previousChord =
+      chordOptions[Math.floor(Math.random() * chordOptions.length)];
+
+    while (remainingBeats > 0) {
+      let chord =
+        previousChord === diatonic[0]
+          ? diatonic[1]
+          : diatonic[Math.floor(Math.random() * diatonic.length)];
+      if (chord !== previousChord) {
+        const duration = Math.min(
+          Math.floor(Math.random() * remainingBeats) + 1,
+          remainingBeats
+        );
+        barProgression.push({
+          chord: chord,
+          duration: duration,
+        });
+        remainingBeats -= duration;
+        previousChord = chord;
+      }
+    }
+
+    progression.push(barProgression);
   }
 
-  return progression;
+  return {
+    progression: progression,
+    beatDuration: beatDuration,
+  };
 }
 
 // Incorporates secondary dominants and borrowed chords
-function generateExploratoryProgression(scale, mode) {
+function generateExploratoryProgression(scale, mode, numOfBars) {
   const diatonic = diatonicChords[mode];
   const secondary = secondaryDominants[mode];
   const borrowed = borrowedChords[mode];
-  const progression = [diatonic[0]]; // Start with the tonic chord
+  const progression = [];
 
-  for (let i = 1; i < 4; i++) {
-    const rand = Math.random();
-    if (rand < 0.6) {
-      progression.push(diatonic[Math.floor(Math.random() * diatonic.length)]);
-    } else if (rand < 0.8) {
-      progression.push(secondary[Math.floor(Math.random() * secondary.length)]);
-    } else {
-      progression.push(borrowed[Math.floor(Math.random() * borrowed.length)]);
+  const timeSig = getTimeSignature();
+  const beatsPerMeasure = timeSig[0];
+  const beatDuration = timeSig[1];
+
+  for (let bar = 0; bar < numOfBars; bar++) {
+    let remainingBeats = beatsPerMeasure;
+    const barProgression = [];
+    let previousChord = diatonic[0]; // Start with the tonic chord
+
+    while (remainingBeats > 0) {
+      let chord = "";
+      if (
+        previousChord === diatonic[0] ||
+        previousChord === secondary[0] ||
+        previousChord === borrowed[0]
+      ) {
+        chord =
+          functionalChords[mode]["T"][
+            Math.floor(Math.random() * functionalChords[mode]["T"].length)
+          ];
+      } else {
+        const rand = Math.random();
+        if (rand < 0.6) {
+          chord = diatonic[Math.floor(Math.random() * diatonic.length)];
+        } else if (rand < 0.8) {
+          chord = secondary[Math.floor(Math.random() * secondary.length)];
+        } else {
+          chord = borrowed[Math.floor(Math.random() * borrowed.length)];
+        }
+      }
+      if (chord !== previousChord) {
+        const duration = Math.min(
+          Math.floor(Math.random() * remainingBeats) + 1,
+          remainingBeats
+        );
+        barProgression.push({
+          chord: chord,
+          duration: duration,
+        });
+        remainingBeats -= duration;
+        previousChord = chord;
+      }
     }
+    progression.push(barProgression);
   }
 
-  return progression;
+  return {
+    progression: progression,
+    beatDuration: beatDuration,
+  };
 }
 
 // Follows strict functional harmony rules
-function generateFunctionalProgression(scale, mode) {
+function generateFunctionalProgression(scale, mode, numOfBars) {
   const progression = [];
-  const functions = ["T", "S", "D", "T"];
 
-  functions.forEach((func) => {
-    const chordOptions = functionalChords[mode][func];
-    const chord = chordOptions[Math.floor(Math.random() * chordOptions.length)];
-    progression.push(chord);
-  });
+  const timeSig = getTimeSignature();
+  const beatsPerMeasure = timeSig[0];
+  const beatDuration = timeSig[1];
 
-  return progression;
+  for (let bar = 0; bar < numOfBars; bar++) {
+    let remainingBeats = beatsPerMeasure;
+    const barProgression = [];
+    let previousChord = functionalChords[mode]["T"][0]; // Start with the tonic chord
+
+    while (remainingBeats > 0) {
+      let chord = "";
+      let chordOptions = "";
+
+      if (
+        remainingBeats === beatsPerMeasure ||
+        (remainingBeats === 1 && progression.length > 1)
+      ) {
+        chordOptions = functionalChords[mode]["T"];
+        chord = chordOptions[Math.floor(Math.random() * chordOptions.length)];
+      } else {
+        const rand = Math.random();
+        if (rand > 0.5) {
+          chordOptions = functionalChords[mode]["S"];
+          chord = chordOptions[Math.floor(Math.random() * chordOptions.length)];
+        } else {
+          chordOptions = functionalChords[mode]["D"];
+          chord = chordOptions[Math.floor(Math.random() * chordOptions.length)];
+        }
+      }
+      if (chord !== previousChord) {
+        const duration = Math.min(
+          Math.floor(Math.random() * remainingBeats) + 1,
+          remainingBeats
+        );
+        barProgression.push({
+          chord: chord,
+          duration: duration,
+        });
+        remainingBeats -= duration;
+        previousChord = chord;
+      }
+    }
+    progression.push(barProgression);
+  }
+
+  return {
+    progression: progression,
+    beatDuration: beatDuration,
+  };
 }
 
 // Focuses on jazz chord progressions and voicings
-function generateJazzProgression(scale, mode) {
+function generateJazzProgression(scale, mode, numOfBars) {
   const diatonic = diatonicChords[mode];
-  const progression = [diatonic[0]]; // Start with the tonic chord
+  const progression = [];
 
-  for (let i = 1; i < 4; i++) {
-    const chord = diatonic[Math.floor(Math.random() * diatonic.length)];
-    progression.push(addJazzVoicing(chord));
+  const timeSig = getTimeSignature();
+  const beatsPerMeasure = timeSig[0];
+  const beatDuration = timeSig[1];
+
+  for (let bar = 0; bar < numOfBars; bar++) {
+    let remainingBeats = beatsPerMeasure;
+    const barProgression = [];
+    const chordOptions = functionalChords[mode]["T"];
+    let previousChord =
+      chordOptions[Math.floor(Math.random() * chordOptions.length)];
+
+    while (remainingBeats > 0) {
+      let chord =
+        previousChord === diatonic[0]
+          ? diatonic[1]
+          : diatonic[Math.floor(Math.random() * diatonic.length)];
+      if (chord !== previousChord) {
+        const duration = Math.min(
+          Math.floor(Math.random() * remainingBeats) + 1,
+          remainingBeats
+        );
+        const jazzyChord = addJazzVoicing(chord);
+        barProgression.push({
+          chord: jazzyChord,
+          duration: duration,
+        });
+        remainingBeats -= duration;
+        previousChord = chord;
+      }
+    }
+    progression.push(barProgression);
   }
 
-  return progression;
+  return {
+    progression: progression,
+    beatDuration: beatDuration,
+  };
 }
 
 function addJazzVoicing(chord) {
@@ -186,6 +357,18 @@ function getCurrentTimestamp() {
   const seconds = String(now.getSeconds()).padStart(2, "0");
   return `${year}-${month}-${day}_${hours}-${minutes}-${seconds}`;
 }
+
+document.getElementById("generate").addEventListener("click", () => {
+  const scale = document.getElementById("scale").value;
+  const mode = document.getElementById("mode").value;
+  const generationMode = document.getElementById("generation-mode").value;
+  const numOfBars = parseInt(document.getElementById("bars").value, 10);
+
+  const generateProgression = modes[generationMode];
+  const chords = generateProgression(scale, mode, numOfBars);
+
+  displayChords(chords, scale, mode);
+});
 
 document.getElementById("save").addEventListener("click", () => {
   const chordsText = document.getElementById("chords").innerText;

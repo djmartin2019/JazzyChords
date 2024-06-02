@@ -64,16 +64,32 @@
               <label for="time-signature">Choose Your Time Signature</label>
               <select id="time-signature">
                 <option value="4/4">4/4</option>
+                <option value="3/4">3/4</option>
                 <option value="6/8">6/8</option>
+                <option value="5/4">5/4</option>
+                <option value="7/8">7/8</option>
                 <option value="8/8">8/8</option>
+                <option value="9/8">9/8</option>
+                <option value="12/8">12/8</option>
               </select>
             </div>
-            <div class="form-group">
+            <!-- <div class="form-group">
               <label for="genre">Choose Your Genre:</label>
               <select id="genre">
                 <option value="pop">Pop</option>
+                <option value="rock">Rock</option>
+                <option value="jazz">Jazz</option>
+                <option value="classical">Classical</option>
+                <option value="blues">Blues</option>
+                <option value="hiphop">Hip-Hop</option>
+                <option value="electronic">Electronic</option>
+                <option value="country">Country</option>
+                <option value="reggae">Reggae</option>
+                <option value="funk">Funk</option>
+                <option value="metal">Metal</option>
               </select>
-            </div>
+            </div> -->
+
             <div class="form-group">
               <label for="bars">Choose Your Number Of Bars:</label>
               <input
@@ -86,7 +102,7 @@
                 max="24"
               />
             </div>
-            <div class="tempo-slider">
+            <!-- <div class="tempo-slider">
               <label for="tempo">Choose Your Tempo:</label>
               <input
                 type="range"
@@ -97,7 +113,7 @@
                 id="tempoSlider"
                 oninput="tempoChange(this.value)"
               />Tempo: <span id="tempoValue"></span>
-            </div>
+            </div> -->
           </div>
           <div class="generate-button">
             <button id="generate">Generate</button>
