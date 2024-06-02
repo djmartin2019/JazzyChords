@@ -41,9 +41,10 @@ function displayChords(chordsData, scale, mode) {
 
   const formattedChords = chordsData.progression
     .map((barProgression) => {
-      const barChords = barProgression.map(
-        (chordData) => `${chordData.chord} (${chordData.duration})`
-      );
+      const barChords = barProgression.map((chordData) => {
+        const formattedChord = chordData.chord.replace("o", "°");
+        return `${formattedChord} (${chordData.duration})`;
+      });
       return `<p>${barChords.join(" - ")}</p>`;
     })
     .join("");
